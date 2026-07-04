@@ -134,5 +134,3 @@ Distributed under the Apache License 2.0. See `LICENSE` for more information.
 ## 👤 Author
 
 **m4nd3l** - [GitHub](https://m4nd3l.github.io)
-
-```
