@@ -1,0 +1,39 @@
+plugins {
+    id 'java'
+    id 'com.google.protobuf' version '0.9.4' apply false
+}
+
+group = 'dev.m4nd3l.easysaves'
+version = '1.0-SNAPSHOT'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(24)
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    //  JSON
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.18.2'
+    // YAML
+    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.18.2'
+    // XML
+    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.18.2'
+    // BSON
+    implementation 'org.mongodb:bson:5.3.1'
+    implementation 'org.mongodb:mongodb-driver-sync:5.3.1'
+    // PROTOBUF
+    implementation 'com.google.protobuf:protobuf-java:4.29.3'
+}
+
+test {
+    useJUnitPlatform()
+}
