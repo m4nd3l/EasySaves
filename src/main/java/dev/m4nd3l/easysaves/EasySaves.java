@@ -43,8 +43,8 @@ public class EasySaves {
         subFiles = new ConcurrentHashMap<>();
 
         resyncFiles();
-
-        config = defaultConfigJustCreated ? new ConcurrentHashMap<>() : new ConcurrentHashMap<>(settings.deserialize(defaultConfigFile, Map.class));
+        Map<String, String> map = settings.deserialize(defaultConfigFile, Map.class);
+        config = defaultConfigJustCreated  || map == null ? new ConcurrentHashMap<>() : new ConcurrentHashMap<>(map);
     }
 
     /**
