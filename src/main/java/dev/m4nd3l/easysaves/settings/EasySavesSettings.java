@@ -2,10 +2,13 @@ package dev.m4nd3l.easysaves.settings;
 
 import dev.m4nd3l.easysaves.files.FileWrapper;
 import dev.m4nd3l.easysaves.security.EasySavesSecurity;
-
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
+/**
+ * Handles the configuration profile structure for runtime serialization systems.
+ * Manages locations, naming conventions, and selected format specifications.
+ */
 public class EasySavesSettings {
     private String appName;
     private String configFileName;
@@ -24,6 +27,12 @@ public class EasySavesSettings {
     public StoringSystem getStoringSystem() { return storingSystem; }
     public String getConfigFileName() { return configFileName; }
 
+    /**
+     * Processes and transforms an object into targeted bytes/text format, then writes it to disk.
+     *
+     * @param file   The target file destination.
+     * @param object The raw object content.
+     */
     public void serialize(FileWrapper file, Object object) {
         try {
             byte[] rawBytes = SerializationProcessor.processToBytes(object, storingSystem);
@@ -37,6 +46,14 @@ public class EasySavesSettings {
         } catch (Exception exception) { throw new RuntimeException("Serialization process halted unexpected", exception); }
     }
 
+    /**
+     * Reads file data from disk, transparently managing decoding/decryption layers, and maps it back to an object.
+     *
+     * @param <T>  The expected output runtime type mapping.
+     * @param file The data file source wrapper.
+     * @param type The parsing class destination architecture blueprint.
+     * @return The mapped object model data instance.
+     */
     public <T> T deserialize(FileWrapper file, Class<T> type) {
         try {
             byte[] processedBytes;
@@ -54,6 +71,9 @@ public class EasySavesSettings {
         } catch (Exception exception) { throw new RuntimeException("Deserialization process halted unexpected", exception); }
     }
 
+    /**
+     * Builder subsystem pattern to configure and yield valid instances of {@link EasySavesSettings}.
+     */
     public static final class Builder {
         private String appName = "JavaApp";
         private String configFileName = "config.cfg";

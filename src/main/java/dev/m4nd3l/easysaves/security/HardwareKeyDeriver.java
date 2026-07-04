@@ -6,8 +6,16 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.util.Base64;
 
+/**
+ * Generates an environment-linked hardware fingerprint key using operating system attributes to construct localized cryptography hooks.
+ */
 public class HardwareKeyDeriver {
 
+    /**
+     * Resolves machine identifiers across OS structures to form an integrated unique fingerprint key.
+     *
+     * @return A Base64 SHA-256 string representing the hardware profile signature block.
+     */
     public static String generateMasterKey() {
         String operatingSystem = System.getProperty("os.name").toLowerCase();
         String hardwareRawData = "";

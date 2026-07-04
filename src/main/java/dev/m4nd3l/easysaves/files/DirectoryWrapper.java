@@ -6,6 +6,9 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Insulated wrapping module mapping operational lifecycle commands targeting folders directories.
+ */
 public class DirectoryWrapper {
     private final File directory;
 
@@ -26,13 +29,17 @@ public class DirectoryWrapper {
     public boolean exists() { return directory.exists(); }
     public boolean isDirectory() { return directory.isDirectory(); }
     public boolean create() { return directory.mkdirs(); }
-
     public boolean delete() { return deleteRecursively(directory); }
     public void deleteOnExit() { directory.deleteOnExit(); }
 
     public FileWrapper resolveFile(String... path) { return new FileWrapper(getAbsolutePath(), String.join(File.separator, path)); }
     public DirectoryWrapper resolveDirectory(String... path) { return new DirectoryWrapper(getAbsolutePath(), String.join(File.separator, path)); }
 
+    /**
+     * Lists all child files sitting directly within this directory level.
+     *
+     * @return A list containing tracked FileWrapper structures.
+     */
     public List<FileWrapper> listFiles() {
         File[] files = directory.listFiles();
         if (files == null) return new ArrayList<>();
@@ -41,6 +48,11 @@ public class DirectoryWrapper {
         return wrappers;
     }
 
+    /**
+     * Lists all child subdirectories sitting directly within this directory level.
+     *
+     * @return A list containing tracked DirectoryWrapper structures.
+     */
     public List<DirectoryWrapper> listDirectories() {
         File[] files = directory.listFiles();
         if (files == null) return new ArrayList<>();
@@ -55,12 +67,25 @@ public class DirectoryWrapper {
         return file.delete();
     }
 
+    /**
+     * Spawns an empty file tracking instance within the current directory structure.
+     *
+     * @param name Name configuration target of the file.
+     * @return Created FileWrapper asset references hook.
+     * @throws IOException If construction errors out.
+     */
     public FileWrapper addFile(String name) throws IOException {
         FileWrapper fileWrapper = resolveFile(name);
         fileWrapper.createEmpty();
         return fileWrapper;
     }
 
+    /**
+     * Spawns an empty subdirectory structure inside the current directory target scope.
+     *
+     * @param name Name configuration target of the folder.
+     * @return Created DirectoryWrapper asset tracking references instance hook.
+     */
     public DirectoryWrapper addDirectory(String name) {
         DirectoryWrapper directoryWrapper = resolveDirectory(name);
         directoryWrapper.create();
@@ -69,7 +94,6 @@ public class DirectoryWrapper {
 
     public boolean removeFile(String name) { return resolveFile(name).delete(); }
     public boolean removeDirectory(String name) { return resolveDirectory(name).delete(); }
-
     public FileWrapper getFile(String name) { return resolveFile(name); }
     public DirectoryWrapper getDirectory(String name) { return resolveDirectory(name); }
 }

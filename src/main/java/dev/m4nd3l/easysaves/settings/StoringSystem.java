@@ -1,5 +1,8 @@
 package dev.m4nd3l.easysaves.settings;
 
+/**
+ * Format layout structures supported for data processing, indicating encryption configurations and layout types.
+ */
 public enum StoringSystem {
     JSON_STRING,
     PROPERTIES_STRING,

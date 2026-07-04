@@ -10,17 +10,27 @@ import org.bson.codecs.EncoderContext;
 import org.bson.codecs.DocumentCodec;
 import org.bson.Document;
 import org.bson.io.BasicOutputBuffer;
-
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.util.Map;
 import java.util.Properties;
 
+/**
+ * Internal parsing module translating objects into raw structured bytes formats (JSON, XML, YAML, Properties, BSON, Java Binary).
+ */
 public class SerializationProcessor {
     private static final ObjectMapper jsonMapper = new ObjectMapper();
     private static final ObjectMapper yamlMapper = new YAMLMapper();
     private static final ObjectMapper xmlMapper = new XmlMapper();
 
+    /**
+     * Transforms an object structure into a byte array utilizing targeted formatting schemes.
+     *
+     * @param object The runtime object instance to serialize.
+     * @param system The format framework layout selection strategy.
+     * @return Raw structured bytes representation of the data.
+     * @throws Exception If transformation algorithms run into structural mapping errors.
+     */
     @SuppressWarnings("unchecked")
     public static byte[] processToBytes(Object object, StoringSystem system) throws Exception {
         String typeName = system.name();
@@ -49,6 +59,16 @@ public class SerializationProcessor {
         throw new UnsupportedOperationException("Unsupported storing layout");
     }
 
+    /**
+     * Restores raw bytes back into complete targeted high-level structured data objects.
+     *
+     * @param <T>    The parsing object type blueprint.
+     * @param bytes  The input source data bytes array block.
+     * @param type   The reflection class mapping identifier.
+     * @param system The architecture style format strategy.
+     * @return A typed instance reconstruction of the input bytes.
+     * @throws Exception If formatting constraints or structural definitions fail to connect correctly.
+     */
     @SuppressWarnings("unchecked")
     public static <T> T processFromBytes(byte[] bytes, Class<T> type, StoringSystem system) throws Exception {
         String typeName = system.name();

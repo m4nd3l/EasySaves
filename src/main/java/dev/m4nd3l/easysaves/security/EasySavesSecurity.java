@@ -9,6 +9,9 @@ import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.util.Base64;
 
+/**
+ * Handles AES-GCM encryption and decryption flows, utilizing localized hardware profiles as the root master key.
+ */
 public class EasySavesSecurity {
 
     private static final String ALGORITHM = "AES/GCM/NoPadding";
@@ -26,8 +29,20 @@ public class EasySavesSecurity {
         catch (Exception exception) { return "FallbackDefaultSecureMasterKeyString"; }
     }
 
+    /**
+     * Encrypts a plaintext string and encodes the result in Base64 format.
+     *
+     * @param plaintext The text input to obscure.
+     * @return An encrypted Base64 string payload containing the IV and cipher tags.
+     */
     public static String encrypt(String plaintext) { return Base64.getEncoder().encodeToString(encrypt(plaintext.getBytes(StandardCharsets.UTF_8))); }
 
+    /**
+     * Encrypts raw bytes using AES/GCM/NoPadding with a randomized IV prefix payload block.
+     *
+     * @param plaintext The byte block array to encrypt.
+     * @return Concat array containing initialization vectors followed by cipher output data blocks.
+     */
     public static byte[] encrypt(byte[] plaintext) {
         try {
             byte[] initializationVector = new byte[IV_LENGTH_BYTES];
@@ -44,8 +59,20 @@ public class EasySavesSecurity {
         } catch (Exception exception) { throw new RuntimeException("Encryption failed", exception); }
     }
 
+    /**
+     * Decrypts a Base64 string payload back into standard readable text format.
+     *
+     * @param encryptedBase64 The base64 combined data string.
+     * @return Decrypted standard plaintext content payload string.
+     */
     public static String decrypt(String encryptedBase64) { return new String(decrypt(Base64.getDecoder().decode(encryptedBase64)), StandardCharsets.UTF_8); }
 
+    /**
+     * Processes combined encrypted data blocks, separating the IV prefix to parse out and decrypt the payload.
+     *
+     * @param combinedOutputs Combined IV array and cipher byte segmentations block.
+     * @return Decrypted clean plain text byte data structure array.
+     */
     public static byte[] decrypt(byte[] combinedOutputs) {
         try {
             ByteBuffer buffer = ByteBuffer.wrap(combinedOutputs);

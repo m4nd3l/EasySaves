@@ -1,10 +1,11 @@
 plugins {
-    id 'java'
-    id 'com.google.protobuf' version '0.9.4' apply false
+    id 'java-library'
+    id 'signing'
+    id 'com.vanniktech.maven.publish' version '0.28.0'
 }
 
-group = 'dev.m4nd3l.easysaves'
-version = '1.0-SNAPSHOT'
+group = 'io.github.m4nd3l'
+version = '1.0.0'
 
 java {
     toolchain {
@@ -32,6 +33,37 @@ dependencies {
     implementation 'org.mongodb:mongodb-driver-sync:5.3.1'
     // PROTOBUF
     implementation 'com.google.protobuf:protobuf-java:4.29.3'
+}
+
+mavenPublishing {
+    configureBasedOnAppliedPlugins()
+
+    publishToMavenCentral(com.vanniktech.maven.publish.SonatypeHost.CENTRAL_PORTAL, true)
+    signAllPublications()
+
+    pom {
+        name = "easysaves"
+        description = "A flexible Java saving library supporting JSON, YAML, XML, BSON, and Protobuf."
+        url = "https://github.com/m4nd3l/easysaves"
+        licenses {
+            license {
+                name = "The Apache License, Version 2.0"
+                url = "http://www.apache.org/licenses/LICENSE-2.0.txt"
+            }
+        }
+        developers {
+            developer {
+                id = "m4nd3l"
+                name = "m4nd3l"
+                email = "mandel123e@gmail.com"
+            }
+        }
+        scm {
+            connection = "scm:git:git://github.com/m4nd3l/easysaves.git"
+            developerConnection = "scm:git:ssh://github.com/m4nd3l/easysaves.git"
+            url = "https://github.com/m4nd3l/easysaves"
+        }
+    }
 }
 
 test {

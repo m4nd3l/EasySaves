@@ -6,6 +6,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 
+/**
+ * Functional abstraction layer over standard file system targets providing straightforward read/write shortcuts.
+ */
 public class FileWrapper {
     private File file;
 
@@ -43,17 +46,58 @@ public class FileWrapper {
     public boolean setExecutable(boolean executable) { return file.setExecutable(executable); }
     public boolean setExecutable(boolean executable, boolean ownerOnly) { return file.setExecutable(executable, ownerOnly); }
 
+    /**
+     * Initializes a physical empty file asset on disk.
+     *
+     * @return True if the file was initialized.
+     * @throws IOException If file system actions error out.
+     */
     public boolean createEmpty() throws IOException { return file.createNewFile(); }
-    public boolean create(String content) throws IOException { boolean result = file.createNewFile(); writeIf(content, false, (_, _) -> result); return result; }
-    public boolean create(byte[] content) throws IOException { boolean result = file.createNewFile(); writeIf(content, false, (_, _) -> result); return result; }
-    public boolean delete() { return file.delete(); }
-    public String deleteAndReadString() { String content = readString(); delete(); return content; }
-    public byte[] deleteAndReadBytes() { byte[] content = readBytes(); delete(); return content; }
-    public void deleteOnExit() { file.deleteOnExit(); }
 
+    /**
+     * Initializes a file structural framework and fills it instantly with string content data.
+     *
+     * @param content String data to commit.
+     * @return True if successful.
+     * @throws IOException If write workflows fail.
+     */
+    public boolean create(String content) throws IOException { boolean result = file.createNewFile(); writeIf(content, false, (_, _) -> result); return result; }
+
+    /**
+     * Initializes a file structural framework and fills it instantly with byte content data.
+     *
+     * @param content Byte blocks data to commit.
+     * @return True if successful.
+     * @throws IOException If write workflows fail.
+     */
+    public boolean create(byte[] content) throws IOException { boolean result = file.createNewFile(); writeIf(content, false, (_, _) -> result); return result; }
+
+    public boolean delete() { return file.delete(); }
+
+    /**
+     * Extracts existing string data completely from a file and deletes the asset off the device immediately.
+     *
+     * @return The extracted text content.
+     */
+    public String deleteAndReadString() { String content = readString(); delete(); return content; }
+
+    /**
+     * Extracts existing byte array data completely from a file and deletes the asset off the device immediately.
+     *
+     * @return The extracted data byte array block.
+     */
+    public byte[] deleteAndReadBytes() { byte[] content = readBytes(); delete(); return content; }
+
+    public void deleteOnExit() { file.deleteOnExit(); }
     public boolean createFolders() { return file.mkdirs(); }
     public boolean createParentFolders() { return getParentFile().mkdirs(); }
 
+    /**
+     * Writes or appends text content inside the wrapped path structure securely.
+     *
+     * @param content String data block segment to put down.
+     * @param append  True to stack contents without truncating existing data logs.
+     */
     public void write(String content, boolean append) {
         try {
             createParentFolders();
@@ -66,6 +110,12 @@ public class FileWrapper {
         } catch (IOException e) { System.err.println(e); }
     }
 
+    /**
+     * Writes or appends byte content inside the wrapped path structure securely.
+     *
+     * @param content Byte sequence array block to put down.
+     * @param append  True to stack contents without truncating existing data logs.
+     */
     public void write(byte[] content, boolean append) {
         try {
             createParentFolders();
@@ -78,12 +128,22 @@ public class FileWrapper {
         } catch (IOException e) { System.err.println(e); }
     }
 
+    /**
+     * Reads all text contents from the file source.
+     *
+     * @return Entire body content as a String, or empty string on failure.
+     */
     public String readString() {
         if (!file.exists()) return "";
         try { return Files.readString(file.toPath()); }
         catch (Exception _) { return ""; }
     }
 
+    /**
+     * Reads all raw bytes from the file source.
+     *
+     * @return Entire raw data byte block array, or an empty byte block tracker array.
+     */
     public byte[] readBytes() {
         if (!file.exists()) return new byte[0];
         try { return Files.readAllBytes(file.toPath()); }
