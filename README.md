@@ -17,7 +17,7 @@
 Add the following dependency to your `build.gradle`:
 ```gradle
 dependencies {
-    implementation 'io.github.m4nd3l:EasySaves:1.0.0'
+    implementation 'io.github.m4nd3l:EasySaves:1.0.1'
 }
 ```
 Or for Maven `pom.xml`:
@@ -25,7 +25,7 @@ Or for Maven `pom.xml`:
 <dependency>
     <groupId>io.github.m4nd3l</groupId>
     <artifactId>EasySaves</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
 </dependency>
 ```
 
